@@ -4,9 +4,11 @@
 use anyhow::Result;
 use futures::TryFutureExt;
 use parking_lot::Mutex;
+use std::option::Option::None;
 use std::{collections::BTreeMap, sync::Arc, time::Duration};
 
 use jsonrpsee::ws_server::WsServerBuilder;
+use multiaddr::Multiaddr;
 use tracing::info;
 
 use sui_config::NodeConfig;
@@ -26,6 +28,7 @@ use sui_json_rpc::event_api::EventApiImpl;
 use sui_json_rpc::read_api::FullNodeApi;
 use sui_json_rpc::read_api::ReadApi;
 use sui_json_rpc_api::EventApiServer;
+use sui_types::crypto::PublicKeyBytes;
 
 pub struct SuiNode {
     grpc_server: tokio::task::JoinHandle<Result<()>>,
@@ -96,12 +99,32 @@ impl SuiNode {
             net_config.http2_keepalive_interval = Some(Duration::from_secs(5));
 
             let mut authority_clients = BTreeMap::new();
-            for validator in genesis.validator_set() {
-                let channel = net_config
-                    .connect_lazy(validator.network_address())
-                    .unwrap();
-                let client = NetworkAuthorityClient::new(channel);
-                authority_clients.insert(validator.public_key(), client);
+
+            if config.enable_reconfig {
+                // Create NetworkAuthorityClient with this epoch's network information
+                let sui_system_state = state.get_sui_system_state_object().await?;
+                let epoch_validators = &sui_system_state.validators.active_validators;
+
+                for validator in epoch_validators {
+                    let net_addr: &[u8] = &validator.metadata.net_address.clone();
+                    let str_addr = std::str::from_utf8(net_addr)?;
+                    let address: Multiaddr = str_addr.parse().unwrap();
+                    //let address = Multiaddr::try_from(net_addr)?;
+                    let channel = net_config.connect_lazy(&address)?;
+                    let client = NetworkAuthorityClient::new(channel);
+                    let name: &[u8] = &validator.metadata.name;
+                    let public_key_bytes = PublicKeyBytes::try_from(name)?;
+                    authority_clients.insert(public_key_bytes, client);
+                }
+            } else {
+                // Create NetworkAuthorityClient with the genesis set
+                for validator in genesis.validator_set() {
+                    let channel = net_config
+                        .connect_lazy(validator.network_address())
+                        .unwrap();
+                    let client = NetworkAuthorityClient::new(channel);
+                    authority_clients.insert(validator.public_key(), client);
+                }
             }
 
             let active_authority = Arc::new(ActiveAuthority::new(

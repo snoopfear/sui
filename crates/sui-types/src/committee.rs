@@ -19,7 +19,9 @@ pub type StakeUnit = u64;
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Committee {
     pub epoch: EpochId,
+
     pub voting_rights: BTreeMap<AuthorityName, StakeUnit>,
+
     pub total_votes: StakeUnit,
     // Note: this is a derived structure, no need to store.
     #[serde(skip)]
