@@ -146,6 +146,12 @@ impl<A> ActiveAuthority<A> {
         Self::new(authority, follower_store, authority_clients)
     }
 
+    pub fn swap_net(&self, new_net: ArcSwap<AuthorityAggregator<A>>) {
+        //self.net.store(Arc::new(AuthorityAggregator::new(
+        //     committee,
+        //   authority_clients,
+        //)));
+    }
     /// Returns the amount of time we should wait to be able to contact at least
     /// 2/3 of the nodes in the committee according to the `no_contact_before`
     /// instant stored in the authority health records. A network needs 2/3 stake

@@ -2,7 +2,7 @@
 // Copyright (c) 2022, Mysten Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::authority_client::AuthorityAPI;
+use crate::authority_client::{AuthorityAPI, NetworkAuthorityClient};
 use crate::gateway_state::{GatewayMetrics, METRICS};
 use crate::safe_client::SafeClient;
 use async_trait::async_trait;

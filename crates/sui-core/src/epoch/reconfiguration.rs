@@ -3,13 +3,17 @@
 
 use crate::authority_active::ActiveAuthority;
 use crate::authority_aggregator::AuthorityAggregator;
-use crate::authority_client::AuthorityAPI;
+use crate::authority_client::{AuthorityAPI, NetworkAuthorityClient};
+use arc_swap::ArcSwap;
+use bcs::Error;
+use multiaddr::Multiaddr;
+use std::collections::BTreeMap;
 use std::sync::atomic::Ordering;
 use std::sync::Arc;
 use std::time::Duration;
 use sui_types::committee::Committee;
 use sui_types::crypto::PublicKeyBytes;
-use sui_types::error::SuiResult;
+use sui_types::error::{SuiError, SuiResult};
 use sui_types::messages::{ConfirmationTransaction, SignedTransaction};
 use sui_types::messages_checkpoint::CheckpointSequenceNumber;
 use typed_store::Map;
@@ -97,13 +101,61 @@ where
             .collect();
         let new_committee = Committee::new(next_epoch, votes);
         self.state.insert_new_epoch_info(&new_committee)?;
-        let new_net = Arc::new(AuthorityAggregator::new(
-            new_committee,
-            self.net.load().clone_inner_clients(),
-        ));
-        self.net.store(new_net.clone());
+
         // TODO Laura: Also reconnect network if changed.
-        // This is blocked for now since we are not storing network info on-chain yet.
+        let mut new_clients = BTreeMap::new();
+        let sui_system_state = self
+            .state
+            .get_sui_system_state_object()
+            .await
+            .map_err(|e| {
+                return SuiError::GenericAuthorityError {
+                    error: e.to_string(),
+                };
+            })
+            .unwrap();
+        let next_epoch_validators = sui_system_state.validators.next_epoch_validators;
+
+        let mut net_config = mysten_network::config::Config::new();
+        net_config.connect_timeout = Some(Duration::from_secs(5));
+        net_config.request_timeout = Some(Duration::from_secs(5));
+        net_config.http2_keepalive_interval = Some(Duration::from_secs(5));
+
+        for validator in next_epoch_validators {
+            let net_addr: &[u8] = &validator.net_address.clone();
+            let str_addr = std::str::from_utf8(net_addr).map_err(|e| {
+                return SuiError::GenericAuthorityError {
+                    error: e.to_string(),
+                };
+            });
+            let address: Multiaddr = str_addr
+                .unwrap()
+                .parse()
+                .map_err(|e: multiaddr::Error| {
+                    return SuiError::GenericAuthorityError {
+                        error: e.to_string(),
+                    };
+                })
+                .unwrap();
+
+            let channel = net_config
+                .connect_lazy(&address)
+                .map_err(|e| {
+                    return SuiError::GenericAuthorityError {
+                        error: e.to_string(),
+                    };
+                })
+                .unwrap();
+            let client = NetworkAuthorityClient::new(channel);
+            let name: &[u8] = &validator.name;
+            let public_key_bytes = PublicKeyBytes::try_from(name)?;
+            new_clients.insert(public_key_bytes, client);
+        }
+
+        // Replace the clients in the authority aggregator with new clients.
+        //self.swap_net(new_clients, new_committee);
+        let new_net = Arc::new(AuthorityAggregator::new(new_committee, new_clients));
+        self.net.store(new_net);
 
         // TODO: Update all committee in all components safely,
         // potentially restart some authority clients.
