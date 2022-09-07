@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.1
+
+### Patch Changes
+
+- c5e4851b: Updated build process from TSDX to tsup.
+
 Version history from v0.1.0 to this day.
 
 ## v0.2.0 - Usability Boost
