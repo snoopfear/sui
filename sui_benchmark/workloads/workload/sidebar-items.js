@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["MAX_GAS_FOR_TESTING"],"enum":["WorkloadType"],"struct":["CombinationWorkload","WorkloadInfo"],"trait":["Workload"]};

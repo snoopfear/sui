@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["validity_threshold"],"struct":["Committee","CommitteeWithNetworkMetadata","NetworkMetadata","ProtocolVersion"],"type":["CommitteeDigest","EpochId","StakeUnit"]};

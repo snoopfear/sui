@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["MAX_GAS_FOR_TESTING"],"fn":["generate_all_gas_for_test","get_ed25519_keypair_from_keystore","make_pay_tx","make_split_coin_tx","split_coin_and_pay"],"type":["UpdatedAndNewlyMintedGasCoins"]};

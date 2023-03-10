@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["GasUnit"],"struct":["CostTable","GasCost","LinearEquation"],"type":["Gas"]};

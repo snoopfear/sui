@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["WorkloadConfiguration"],"fn":["configure_combined_mode"]};

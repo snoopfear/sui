@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["DefaultSignatureVerifier","IgnoreSignatureVerifier"],"trait":["SignatureVerifier"]};

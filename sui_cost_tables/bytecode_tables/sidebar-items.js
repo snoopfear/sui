@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["CONST_SIZE","MIN_EXISTS_DATA_SIZE","REFERENCE_SIZE","STRUCT_SIZE","VM_FLAT_FEE"],"fn":["legacy_bytecode_instruction_costs","new_from_instructions","zero_cost_instruction_table","zero_cost_schedule"],"static":["INITIAL_COST_SCHEDULE"],"struct":["GasStatus"]};

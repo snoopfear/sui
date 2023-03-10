@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["BalanceChangeType","BalanceChangeTypeVariants","Event","EventType","TransferType","TransferTypeVariants"],"struct":["EventEnvelope","EventID"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ExecutionEffects"],"mod":["benchmark_setup","drivers","embedded_reconfig_observer","fullnode_reconfig_observer","options","system_state_observer","util","workloads"],"struct":["FullNodeProxy","LocalValidatorAggregatorProxy"],"trait":["ValidatorProxy"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["SuiJsonCallArg","SuiJsonValueErrorKind"],"fn":["check_valid_homogeneous","primitive_type","resolve_move_function_args"],"struct":["SuiJsonValue","SuiJsonValueError"]};

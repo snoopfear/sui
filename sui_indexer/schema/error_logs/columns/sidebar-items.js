@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["error","error_time","error_type","id","star"]};

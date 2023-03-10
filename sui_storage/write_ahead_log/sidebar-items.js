@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["TransactionCommitPhase"],"struct":["DBTxGuard","DBWriteAheadLog","DBWriteAheadLogTables","DBWriteAheadLogTablesConfigurator","DBWriteAheadLogTablesReadOnly"],"trait":["TxGuard","WriteAheadLog"]};

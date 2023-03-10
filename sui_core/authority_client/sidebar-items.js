@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["make_authority_clients","make_network_authority_client_sets_from_committee","make_network_authority_client_sets_from_genesis"],"struct":["NetworkAuthorityClient"],"trait":["AuthorityAPI"]};

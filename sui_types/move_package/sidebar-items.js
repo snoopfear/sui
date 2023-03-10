@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["PACKAGE_MODULE_NAME","UPGRADECAP_STRUCT_NAME"],"fn":["disassemble_modules","normalize_modules"],"struct":["FnInfo","FnInfoKey","MovePackage","UpgradeCap"],"type":["FnInfoMap"]};

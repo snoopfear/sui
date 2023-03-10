@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CheckCallArg"],"fn":["convert_type_argument_error","generate_package_id","missing_unwrapped_msg","new_move_vm","new_session","resolve_and_type_check","validate_primitive_arg_string"],"struct":["MoveVM","TypeCheckSuccess"]};

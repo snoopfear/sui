@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["checkpoint","epoch","object_digest","object_id","object_status","owner_address","owner_type","star","version"]};
